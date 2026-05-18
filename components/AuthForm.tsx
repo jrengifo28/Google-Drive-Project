@@ -15,6 +15,8 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import Image from "next/image";
 
 const formSchema = z.object({
   username: z.string().min(2).max(50),
@@ -23,7 +25,9 @@ const formSchema = z.object({
 type FormType = "sign-in" | "sign-up";
 
 const AuthForm = ({ type }: { type: FormType }) => {
-  // 1. Define form
+  const [isLoading, setLoading] = useState(false)
+
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -96,8 +100,13 @@ const AuthForm = ({ type }: { type: FormType }) => {
             )}
           />
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="form-submit-button">
+        {type === "sign-in" ? "Sign In" : "Sign Up"}
 
+        {isLoading && (
+          <Image src="/assets/icons/loader.svg" alt="loader" width={24} height={24} className="ml-2 animate-spin" />
+        )}
+        </Button>
       </form>
     </Form>
   </>
